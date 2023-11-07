@@ -13,7 +13,7 @@ const postUrl = async (req: Request, res: Response): Promise<void> => {
     if (urlInDB) {
       res.status(400).json({
         message: 'Url already exists',
-        url: `${process.env.API_URL}/${urlInDB.codeID}`,
+        url: `${protocol}://${host}/shorten/${urlInDB.codeID}`,
         urlLong: urlInDB.urlLong,
       })
       return

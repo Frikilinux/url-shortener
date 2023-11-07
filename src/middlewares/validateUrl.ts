@@ -7,6 +7,8 @@ const validateUrl = async (
   next: NextFunction
 ): Promise<void> => {
   const { url }: { url: string } = req.body
+  console.log(req.body);
+  
   try {
     new URL(url)
     next()
