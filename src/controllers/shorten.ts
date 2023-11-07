@@ -4,20 +4,21 @@ import { ShortUrl } from '../models/shortenUrl'
 
 const postUrl = async (req: Request, res: Response): Promise<void> => {
   const { url } = req.body
+  const host = req.headers.host || process.env.API_HOST
 
   try {
     const urlInDB = await ShortUrl.findOne({ urlLong: url })
 
     if (urlInDB) {
       res.status(400).json({
-        message: 'Url exist',
+        message: 'Url already exists',
         url: `${process.env.API_URL}/${urlInDB.codeID}`,
         urlLong: urlInDB.urlLong,
       })
       return
     }
 
-    // Generate a base64 code not used by others urls
+    // Generate a base64 code and check if it already exists
     const codeID = await genId()
 
     const newUrl = new ShortUrl({
@@ -29,12 +30,15 @@ const postUrl = async (req: Request, res: Response): Promise<void> => {
     await newUrl.save()
 
     res.status(201).json({
-      url: `${process.env.API_URL}/${codeID}`,
+      url: `${host}/${codeID}`,
       urlLong: newUrl.urlLong,
     })
   } catch (error) {
     console.log(error)
-    return
+    res.status(500).json({
+      message: 'Internal server error',
+      code: '500',
+    })
   }
 }
 
@@ -61,7 +65,7 @@ const getUrl = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     console.error(error)
     res.status(500).json({
-      message: 'Server error',
+      message: 'Internal server error',
       code: '500',
     })
   }
