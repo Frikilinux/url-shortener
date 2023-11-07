@@ -5,6 +5,7 @@ import { ShortUrl } from '../models/shortenUrl'
 const postUrl = async (req: Request, res: Response): Promise<void> => {
   const { url } = req.body
   const host = req.headers.host || process.env.API_HOST
+  const protocol = req.headers['x-forwarded-proto'] || 'http'
 
   try {
     const urlInDB = await ShortUrl.findOne({ urlLong: url })
@@ -30,7 +31,7 @@ const postUrl = async (req: Request, res: Response): Promise<void> => {
     await newUrl.save()
 
     res.status(201).json({
-      url: `${host}/${codeID}`,
+      url: `${protocol}://${host}/shorten/${codeID}`,
       urlLong: newUrl.urlLong,
     })
   } catch (error) {
