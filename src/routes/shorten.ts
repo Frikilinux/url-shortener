@@ -6,6 +6,6 @@ const router = Router()
 
 router.post('/', validadeUrl, postUrl)
 
-router.get('/', getUrl)
+router.get('/:codeID', getUrl)
 
 export default router

@@ -1,9 +1,9 @@
 import { Model, Schema, model } from 'mongoose'
 
 interface IUrl {
-  urlLong?: string
-  codeID?: string
-  created?: Date
+  urlLong: string
+  codeID: string
+  created: Date
 }
 
 const ShortUrlSchema = new Schema({
